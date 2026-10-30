@@ -5,7 +5,8 @@ namespace Blackbaud.Interview.Cards;
 /// </summary>
 public class Deck
 {
-    private readonly Stack<Card> _stackOfCards;
+    private static readonly Random Random = new();
+    private Stack<Card> _stackOfCards;
 
     /// <summary>
     /// Private constructor for a new deck of <paramref name="cards"/>.
@@ -28,6 +29,34 @@ public class Deck
                 Enum.GetValues<Rank>().Select(rank =>
                     new Card(rank, suit))
         ));
+    }
+
+    /// <summary>
+    /// Shuffles the current deck once using the Fisher-Yates algorithm.
+    /// </summary>
+    public void Shuffle()
+    {
+        var cards = _stackOfCards.ToList();
+
+        for (var i = cards.Count - 1; i > 0; i--)
+        {
+            var j = Random.Next(0, i + 1);
+            (cards[i], cards[j]) = (cards[j], cards[i]);
+        }
+
+        _stackOfCards = new Stack<Card>(cards);
+    }
+
+    /// <summary>
+    /// Shuffles the deck a given number of times.
+    /// </summary>
+    /// <param name="times"></param>
+    public void Shuffle(int times)
+    {
+        for (var i = 0; i < times; i++)
+        {
+            Shuffle();
+        }
     }
 
     /// <summary>
